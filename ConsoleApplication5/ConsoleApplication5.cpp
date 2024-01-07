@@ -10,13 +10,74 @@ extern "C" {
 
 }
 
+
 #pragma comment(lib,"Lua5/Lua54.lib")
+static void DumpStack(lua_State* L) {
+	int top = lua_gettop(L);
+	for (int i = 1; i <= top; i++) {
+		int t = lua_type(L, i);
+		std::cout << "Starting test\n";
+		switch (t) {
+
+		case(LUA_TNONE):
+			std::cout << "None\n";
+			break;
+		case(LUA_TNIL):
+			std::cout << "Nil\n";
+			break;
+		case(LUA_TBOOLEAN):
+			switch (lua_toboolean(L, i)) {
+			case(1):
+				std::cout << "Boolean: True \n";
+				break;
+			case(0):
+				std::cout << "Boolean: False \n";
+				break;
+			}
+			break;
+		case(LUA_TLIGHTUSERDATA):
+			std::cout << "Light userdata:" << lua_touserdata(L, i) << "\n";
+			break;
+		case(LUA_TNUMBER):
+			std::cout << "Number: " << lua_tonumber(L, i) << "\n";
+			break;
+		case(LUA_TSTRING):
+			std::cout << "String: " << lua_tostring(L, i) << "\n";
+			break;
+		case(LUA_TTABLE):
+			std::cout << "Table: 0x" << lua_topointer(L, i) << "\n";
+			break;
+		case(LUA_TFUNCTION):
+			std::cout << "Function: 0x" << lua_topointer(L, i) << "\n";
+			break;
+		case(LUA_TUSERDATA):
+			std::cout << "Userdata: 0x " << lua_touserdata(L, i) << "\n";
+			break;
+
+		}
+
+	}
+}
+
 const char* str =  "Hewo baby";
 int main(int argc) {
 	
 	lua_State* L = luaL_newstate();
 	luaL_openlibs(L);
+	lua_pushnil(L);
+	lua_pushboolean(L, 1);
+	lua_pushlightuserdata(L, &str);
+	lua_pushnumber(L, 20);
+	lua_pushstring(L, "Hewoo");
+	lua_newtable(L);
+	luaL_loadstring(L, "print(\"hi\")");
+	size_t size = 3;
+	lua_newuserdatauv(L, size, 3);
+	DumpStack(L);
+
 	
+
+
 
 	return 0;
 
