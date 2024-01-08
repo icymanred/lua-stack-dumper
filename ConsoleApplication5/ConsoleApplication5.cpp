@@ -26,14 +26,7 @@ static void DumpStack(lua_State* L) {
 			std::cout << "Nil\n";
 			break;
 		case(LUA_TBOOLEAN):
-			switch (lua_toboolean(L, i)) {
-			case(1):
-				std::cout << "Boolean: True \n";
-				break;
-			case(0):
-				std::cout << "Boolean: False \n";
-				break;
-			}
+			std::cout << "Boolean: " << lua_toboolean(L, i) ? "True" : "False" << " \n";
 			break;
 		case(LUA_TLIGHTUSERDATA):
 			std::cout << "Light userdata:" << lua_touserdata(L, i) << "\n";
